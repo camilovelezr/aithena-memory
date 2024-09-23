@@ -84,6 +84,24 @@ CREATE TABLE IF NOT EXISTS {model_name} (
     db_query(query, response=False)
 
 
+def create_embedding_index(model_name: str) -> None:
+    """Create a vector index."""
+    query = f"""
+CREATE INDEX IF NOT EXISTS embedding_index ON {model_name} USING hnsw (embedding vector_l2_ops)
+"""
+
+    db_query(query, response=False)
+
+
+def drop_embedding_index(model_name: str) -> None:
+    """Drop a vector index."""
+    query = f"""
+DROP INDEX IF EXISTS embedding_index
+"""
+
+    db_query(query, response=False)
+
+
 def _drop_table(table: str):
 
     db_query(f"DROP TABLE IF EXISTS {table}", response=False)

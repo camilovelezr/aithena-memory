@@ -3,6 +3,23 @@ from enum import Enum
 
 from pydantic import BaseModel
 from pydantic import Field
+from pydantic import RootModel
+
+
+class BaseList(RootModel):
+    """Utility class for list models."""
+
+    def __hash__(self) -> int:
+        return hash(self.model_dump_json())
+
+    def __iter__(self):  # noqa
+        return iter(self.root)
+
+    def __getitem__(self, item):  # noqa
+        return self.root[item]
+
+    def __len__(self):  # noqa
+        return len(self.root)
 
 
 class AuthorOrder(Enum):
@@ -49,6 +66,11 @@ class Chunk(IndexedModel):
 class Embedding(IndexedModel):
     chunk_id: int
     embedding: list[float]
+    distance: float | None = None
+
+
+class EmbeddingList(BaseList):
+    root: list[Embedding]
 
 
 class Citation(BaseModel):
